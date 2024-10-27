@@ -1,39 +1,47 @@
 { pkgs, ... }:
 let
-  sshKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPCatP3klEjfQPSiJNUc3FRDdz927BG1IzektpouzOZR" ];
-  host = "server.main.garnix-minecraft.p1n3appl3.garnix.me";
+  sshKeys = [
+    "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBOa6Afp4TFx1do9jqGmZVRVrVJpu5qsIehS///ZY4iYCn5wkJdCNVxwx49XWV50rfB561MsX2mQHg4/8JQA+18w="
+  ];
 in
 {
-  garnix.server = { enable = true;
-    persistence = { enable = true;
+  garnix.server = {
+    enable = true;
+    persistence = {
+      enable = true;
       name = "minecraft";
     };
   };
   services.openssh.enable = true;
 
-  users.users.julia = {
+  users.users.oz = {
     isNormalUser = true;
-    description = "julia";
-    extraGroups = [ "wheel" "systemd-journal" ];
+    description = "oz";
+    extraGroups = [
+      "wheel"
+      "systemd-journal"
+    ];
     openssh.authorizedKeys.keys = sshKeys;
   };
 
   security.sudo.wheelNeedsPassword = false;
 
-  environment.systemPackages = [
-    pkgs.htop
-  ];
+  environment.systemPackages = [ pkgs.bottom ];
 
-  services.minecraft-server = { enable = true;
+  services.minecraft-server = {
+    enable = true;
     eula = true;
   };
 
-  networking.firewall.allowedTCPPorts = [ 80 443 25565 ];
+  networking.firewall.allowedTCPPorts = [
+    80
+    443
+    25565
+  ];
   networking.firewall.allowedUDPPorts = [ 25565 ];
   nixpkgs = {
     hostPlatform = "x86_64-linux";
     config.allowUnfree = true;
   };
-   system.stateVersion = "24.05";
+  system.stateVersion = "24.05";
 }
-
